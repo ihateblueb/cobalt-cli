@@ -1,7 +1,7 @@
 #!/bin/bash
 # cobalt-cli
 VERSION="0.1"
-DEBUG="false"
+DEBUG="true"
 
 # default api url
 APIURL="co.wuk.sh"
@@ -160,6 +160,7 @@ download() {
       exit 1
     fi
   fi
+  
 }
 
 if [[ "$MODE" == "auto" ]]; then
@@ -167,7 +168,7 @@ if [[ "$MODE" == "auto" ]]; then
     echo "[cobalt] fetching stream url from $APIURL in auto mode..."
     download
   else
-    echo "[cobalt] please specify a url with the -u flag!"
+    echo "[cobalt] please specify a url with the -u flag."
   fi
 fi
 
@@ -176,6 +177,6 @@ if [[ "$MODE" == "audio" ]]; then
     echo "[cobalt] fetching stream url from $APIURL in audio mode..."
     download
   else
-    echo "[cobalt] please specify a url with the -u flag!"
+    echo "[cobalt] please specify a url with the -u flag."
   fi
 fi
