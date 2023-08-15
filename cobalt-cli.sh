@@ -1,7 +1,7 @@
 #!/bin/bash
 # cobalt-cli
 VERSION="0.1"
-DEBUG="true"
+DEBUG="false"
 
 # default api url
 APIURL="co.wuk.sh"
