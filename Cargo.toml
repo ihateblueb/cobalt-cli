@@ -1,6 +1,12 @@
 [package]
 name = "cobalt-cli"
-version = "0.2.0"
+version = "0.2.1"
+authors = ["blueb <ihateblueb@proton.me>"]
+license = "AGPL-3.0"
+description = "save what you love from your terminal"
+homepage = "https://github.com/ihateblueb/cobalt-cli"
+repository = "https://github.com/ihateblueb/cobalt-cli"
+readme = "README.md"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
