@@ -182,7 +182,7 @@ fn main() {
     if mode == "auto" {
         download::auto(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec,  ttwatermark, &audioformat, dublang, fullaudio, mute)
     } else if mode == "audio" {
-        // download::audio(PREFIX, &apiurl, &path, &url, &quality, &codec, &ttwatermark, &audioformat, &dublang, &fullaudio, &mute)
+        download::audio(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec, ttwatermark, &audioformat, dublang, fullaudio, mute)
     } else {
         errors::create_end("invalid mode. options: auto, audio");
     }
