@@ -15,11 +15,11 @@ pub fn auto(
     url: &str,
     quality: &str,
     codec: &str,
-    ttwatermark: &str,
+    ttwatermark: bool,
     audioformat: &str,
-    dublang: &str,
-    fullaudio: &str,
-    mute: &str,
+    dublang: bool,
+    fullaudio: bool,
+    mute: bool,
 ) {
     println!("{prefix} getting stream URL for {}...", url.color("yellow"));
 
@@ -28,10 +28,22 @@ pub fn auto(
         getstream_body.insert("vCodec", codec);
         getstream_body.insert("vQuality", quality);
         getstream_body.insert("aFormat", audioformat);
-        getstream_body.insert("isNoTTWatermark", ttwatermark);
-        getstream_body.insert("isTTFullAudio", fullaudio);
-        getstream_body.insert("isAudioMuted", mute);
-        getstream_body.insert("dubLang", dublang);
+        let inttwm = &ttwatermark.to_string();
+        let ifa = &fullaudio.to_string();
+        let iam = &mute.to_string();
+        let idl = &dublang.to_string();
+        if ttwatermark == true {
+            getstream_body.insert("isNoTTWatermark", inttwm);
+        }
+        if fullaudio == true {
+            getstream_body.insert("isTTFullAudio", ifa);
+        }
+        if mute == true {
+            getstream_body.insert("isAudioMuted", iam);
+        }
+        if dublang == true {
+            getstream_body.insert("dubLang", idl);
+        }
 
     let getstream_url = &format!("https://{apiurl}/api/json");
     if debug {
@@ -58,7 +70,6 @@ async fn getstream(prefix: &str, url: &str, body: HashMap<&str, &str>, path: &st
         .send()
         .await;
     let formatted_response = response.expect("method not found in `Result<Response, Error>`").text().await.unwrap();
-    println!("{}", formatted_response);
     
     let fmtd_res2: Value = serde_json::from_str(&formatted_response).unwrap();
 
@@ -78,10 +89,15 @@ use std::io::Cursor;
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
  
 async fn downloadfromstream(prefix: &str, url: &str, path: &str) -> Result<()> {
+    println!("{} got stream url. starting download...", prefix);
     let response = reqwest::get(url.to_string()).await?;
-    let mut file = std::fs::File::create(format!("{path}/silly.mp4"))?;
+    let filename1 = response.headers().get("Content-Disposition").unwrap().to_str().ok();
+    let filename2 = filename1.unwrap().strip_prefix("attachment; filename=\"");
+    let filename3 = filename2.unwrap().strip_suffix("\"").unwrap();
+    let full_path = format!("{}/{}", path, filename3);
+    let mut file = std::fs::File::create(format!("{path}/{filename3}"))?;
     let mut content =  Cursor::new(response.bytes().await?);
     std::io::copy(&mut content, &mut file)?;
-    println!("{} completed download.", prefix);
+    println!("{} completed download. saved as {}", prefix, full_path);
     Ok(())
 }

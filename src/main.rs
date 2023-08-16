@@ -5,7 +5,7 @@ use std::env;
 mod download;
 mod errors;
 
-static DEBUG: bool = true;
+static DEBUG: bool = false;
 static PREFIX: &'static str = "[cobalt]";
 
 fn main() {
@@ -56,6 +56,7 @@ fn main() {
             Arg::new("ttwatermark")
                 .short('w')
                 .long("ttwatermark")
+                .num_args(0)
                 .help("disable tiktok watermark (default: false)"),
         )
         // audio
@@ -69,18 +70,21 @@ fn main() {
             Arg::new("dublang")
                 .short('d')
                 .long("dublang")
+                .num_args(0)
                 .help("dub language (default: false)"),
         )
         .arg(
             Arg::new("fullaudio")
                 .short('k')
                 .long("fullaudio")
+                .num_args(0)
                 .help("get tiktok full audio (default: false)"),
         )
         .arg(
             Arg::new("mute")
                 .short('j')
                 .long("mute")
+                .num_args(0)
                 .help("mute audio when possible (default: false)"),
         )
         .get_matches();
@@ -122,11 +126,11 @@ fn main() {
     let codec: &String = matches.get_one::<String>("codec").unwrap_or(&d_codec);
 
     // tiktok watermark
-    let mut ttwatermark = "unspecified".to_string();
-    if matches.get_one::<String>("ttwatermark").is_none() {
-        ttwatermark = "false".to_string();
+    let mut ttwatermark = false;
+    if matches.get_flag("ttwatermark") {
+        ttwatermark = true;
     } else {
-        ttwatermark = "true".to_string();
+        ttwatermark = false;
     }
 
     // audio format
@@ -136,27 +140,27 @@ fn main() {
         .unwrap_or(&d_audioformat);
 
     // dub lang
-    let mut dublang = "unspecified".to_string();
-    if matches.get_one::<String>("dublang").is_none() {
-        dublang = "false".to_string();
+    let mut dublang = false;
+    if matches.get_flag("dublang") {
+        dublang = true;
     } else {
-        dublang = "true".to_string();
+        dublang = false;
     }
 
     // full audio
-    let mut fullaudio = "unspecified".to_string();
-    if matches.get_one::<String>("fullaudio").is_none() {
-        fullaudio = "false".to_string();
+    let mut fullaudio = false;
+    if matches.get_flag("fullaudio") {
+        fullaudio = true;
     } else {
-        fullaudio = "true".to_string();
+        fullaudio = false;
     }
 
     // mute audio
-    let mut mute = "unspecified".to_string();
-    if matches.get_one::<String>("mute").is_none() {
-        mute = "false".to_string();
+    let mut mute = false;
+    if matches.get_flag("mute") {
+        mute = true;
     } else {
-        mute = "true".to_string();
+        mute = false;
     }
 
     // sillyyyy :3
@@ -176,7 +180,7 @@ fn main() {
 
     // now its download time
     if mode == "auto" {
-        download::auto(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec,  &ttwatermark, &audioformat, &dublang, &fullaudio, &mute)
+        download::auto(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec,  ttwatermark, &audioformat, dublang, fullaudio, mute)
     } else if mode == "audio" {
         // download::audio(PREFIX, &apiurl, &path, &url, &quality, &codec, &ttwatermark, &audioformat, &dublang, &fullaudio, &mute)
     } else {
