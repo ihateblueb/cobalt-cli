@@ -4,8 +4,9 @@ use std::env;
 
 mod download;
 mod errors;
+mod playlist;
 
-static DEBUG: bool = false;
+static DEBUG: bool = true;
 static PREFIX: &'static str = "[cobalt]";
 
 fn main() {
@@ -37,7 +38,7 @@ fn main() {
             Arg::new("url")
                 .short('u')
                 .long("url")
-                .help("url to download from"),
+                .help("url(s) to download from"),
         )
         // video
         .arg(
@@ -86,6 +87,13 @@ fn main() {
                 .long("mute")
                 .num_args(0)
                 .help("mute audio when possible (default: false)"),
+        )
+        .arg(
+            Arg::new("playlist")
+                .short('y')
+                .long("playlist")
+                .num_args(0)
+                .help("is url path to a yt playlist (default: false)"),
         )
         .get_matches();
 
@@ -163,6 +171,14 @@ fn main() {
         mute = false;
     }
 
+    // mute audio
+    let mut playlist = false;
+    if matches.get_flag("playlist") {
+        playlist = true;
+    } else {
+        playlist = false;
+    }
+
     // sillyyyy :3
     if DEBUG {
         println!(" ");
@@ -179,11 +195,55 @@ fn main() {
     }
 
     // now its download time
-    if mode == "auto" {
-        download::auto(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec,  ttwatermark, &audioformat, dublang, fullaudio, mute)
-    } else if mode == "audio" {
-        download::audio(PREFIX, DEBUG, &apiurl, &path, &url, &quality, &codec, ttwatermark, &audioformat, dublang, fullaudio, mute)
+    if playlist {
+        playlist::download(
+            PREFIX,
+            DEBUG,
+            &mode,
+            &apiurl,
+            &path,
+            &url,
+            &quality,
+            &codec,
+            ttwatermark,
+            &audioformat,
+            dublang,
+            fullaudio,
+            mute,
+        );
     } else {
-        errors::create_end("invalid mode. options: auto, audio");
+        if mode == "auto" {
+            download::auto(
+                PREFIX,
+                DEBUG,
+                &apiurl,
+                &path,
+                &url,
+                &quality,
+                &codec,
+                ttwatermark,
+                &audioformat,
+                dublang,
+                fullaudio,
+                mute,
+            );
+        } else if mode == "audio" {
+            download::audio(
+                PREFIX,
+                DEBUG,
+                &apiurl,
+                &path,
+                &url,
+                &quality,
+                &codec,
+                ttwatermark,
+                &audioformat,
+                dublang,
+                fullaudio,
+                mute,
+            );
+        } else {
+            errors::create_end("invalid mode. options: auto, audio");
+        }
     }
 }
