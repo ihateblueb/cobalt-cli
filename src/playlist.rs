@@ -48,6 +48,13 @@ pub fn download(
     let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
     let result = vididregex.captures_iter(&rss_content);
 
+    // now DOWNLAOD
+
+    println!(
+        "{} starting to download videos in playlist... you might be here for a while!",
+        prefix
+    );
+
     for mat in result {
         let matchurl = format!("https://youtu.be/{}", mat.get(1).unwrap().as_str());
         if mode == "auto" {
@@ -59,18 +66,10 @@ pub fn download(
         }
     }
 
-    // now DOWNLAOD
-
-    println!(
-        "{} starting to download videos in playlist... you might be here for a while!",
-        prefix
-    );
-
     println!("{} completed all downloads to {}", prefix, path);
 }
 
 fn get_feed(url: &str) -> Result<String, Box<dyn Error>> {
     let body = reqwest::blocking::get(url)?.text()?;
-
     Ok(body)
 }
