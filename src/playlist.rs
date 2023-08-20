@@ -1,10 +1,10 @@
 use crate::download;
 use crate::errors;
 
+use once_cell::sync::Lazy;
+use regex::Regex;
 use reqwest;
 use std::error::Error;
-use regex::Regex;
-use once_cell::sync::Lazy;
 
 pub fn download(
     prefix: &str,
@@ -21,10 +21,7 @@ pub fn download(
     fullaudio: bool,
     mute: bool,
 ) {
-    println!(
-        "{} starting to get playlist content...",
-        prefix
-    );
+    println!("{} starting to get playlist content...", prefix);
 
     let playlisturl = "nourl";
 
@@ -40,28 +37,25 @@ pub fn download(
     // and told me about the RSS feeds which are used for this and that SIGNIFICANTLY helped with this feature
 
     let videoids = get_feed(playlisturl);
-    
+
     println!(
         "{} starting to download videos in playlist... you might be here for a while!",
         prefix
     );
-    
+
     println!("{:?}", videoids);
     if let Ok(video) = videoids {
         println!("{:?}", video);
     }
 
-    println!(
-        "{} completed all downloads to {}",
-        prefix, path
-    );
-
+    println!("{} completed all downloads to {}", prefix, path);
 }
 
 #[tokio::main]
-async fn get_feed(url: &str) -> Result<Vec<Vec<&str>>, Box<dyn Error>> {
+async fn get_feed(url: &str) -> Result<(), Box<dyn Error>> {
     let client = reqwest::Client::new();
-    let content = client.get("https://www.youtube.com/feeds/videos.xml")
+    let content = client
+        .get("https://www.youtube.com/feeds/videos.xml")
         .query(&[("playlist_id", "PLfobC1Ig9oQEapImB-ZzZ7H07myXmDnhC")])
         .send()
         .await?
@@ -70,17 +64,15 @@ async fn get_feed(url: &str) -> Result<Vec<Vec<&str>>, Box<dyn Error>> {
 
     let videoids = collect_ids(&content);
 
-    Ok(videoids)
+    println!("shit {:?}", videoids);
+
+    Ok(())
 }
 
-pub fn collect_ids(content: &str) -> Vec<Vec<&str>> {
-    static REGEX_CORRECTIONS: Lazy<Regex> =
-        Lazy::new(|| Regex::new(r"/^<yt:videoId>(.*)<\/yt:videoId>$/g").unwrap());
+pub fn collect_ids(content: &str) -> &str {
+    let re = Regex::new(r"/^<yt:videoId>(.*)<\/yt:videoId>$/g").unwrap();
 
-    let vector_match: Vec<Vec<&str>> = REGEX_CORRECTIONS
-        .captures_iter(content)
-        .map(|c| c.iter().map(|m| m.unwrap().as_str()).collect())
-        .collect();
+    println!("{:?}", re.find(content));
 
-    return vector_match;
+    return "e";
 }
