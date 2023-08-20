@@ -1,11 +1,9 @@
 use crate::download;
 use crate::errors;
 
-use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest;
 use std::error::Error;
-use std::fmt::format;
 
 pub fn download(
     prefix: &str,
