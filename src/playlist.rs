@@ -23,12 +23,12 @@ pub fn download(
 ) {
     println!("{} starting to get playlist content...", prefix);
 
-    let playlisturl = "nourl";
+    let mut playlisturl = "nourl";
 
     if url.starts_with("https://www.youtube.com/playlist?list=") {
-        let playlisturl = url.strip_prefix("https://www.youtube.com/playlist?list=");
+        playlisturl = url.strip_prefix("https://www.youtube.com/playlist?list=").unwrap();
     } else if url.starts_with("https://youtube.com/playlist?list=") {
-        let playlisturl = url.strip_prefix("https://youtube.com/playlist?list=");
+        playlisturl = url.strip_prefix("https://youtube.com/playlist?list=").unwrap();
     } else {
         errors::create_end("invalid playlist url.");
     }
@@ -36,43 +36,37 @@ pub fn download(
     // @patter@mcr.wtf left a comment on one of my posts (https://wetdry.world/deck/@patter@mcr.wtf/110908024192301245)
     // and told me about the RSS feeds which are used for this and that SIGNIFICANTLY helped with this feature
 
-    let videoids = get_feed(playlisturl);
+    let rss_url = format!(
+        "https://www.youtube.com/feeds/videos.xml?playlist_id={}",
+        playlisturl
+    );
+    let rss_content = get_feed(&rss_url).unwrap();
+
+    // get ids
+
+    println!("{:?}", rss_content);
+
+    let vididregex = Regex::new(r"/<yt:videoId>(.*)<\/yt:videoId>/gmU").unwrap();
+    let result = vididregex.captures_iter(&rss_content);
+
+    for mat in result {
+        println!("{:#?}", mat);
+    }
+
+    println!("{:#?}", vididregex.find_iter(&rss_content).count());
+
+    // now DOWNLAOD
 
     println!(
         "{} starting to download videos in playlist... you might be here for a while!",
         prefix
     );
 
-    println!("{:?}", videoids);
-    if let Ok(video) = videoids {
-        println!("{:?}", video);
-    }
-
     println!("{} completed all downloads to {}", prefix, path);
 }
 
-#[tokio::main]
-async fn get_feed(url: &str) -> Result<(), Box<dyn Error>> {
-    let client = reqwest::Client::new();
-    let content = client
-        .get("https://www.youtube.com/feeds/videos.xml")
-        .query(&[("playlist_id", "PLfobC1Ig9oQEapImB-ZzZ7H07myXmDnhC")])
-        .send()
-        .await?
-        .text()
-        .await?;
+fn get_feed(url: &str) -> Result<String, Box<dyn Error>> {
+    let body = reqwest::blocking::get(url)?.text()?;
 
-    let videoids = collect_ids(&content);
-
-    println!("shit {:?}", videoids);
-
-    Ok(())
-}
-
-pub fn collect_ids(content: &str) -> &str {
-    let re = Regex::new(r"/^<yt:videoId>(.*)<\/yt:videoId>$/g").unwrap();
-
-    println!("{:?}", re.find(content));
-
-    return "e";
+    Ok(body)
 }
