@@ -6,7 +6,7 @@ mod download;
 mod errors;
 mod playlist;
 
-static DEBUG: bool = true;
+static DEBUG: bool = fals;
 static PREFIX: &'static str = "[cobalt]";
 
 fn main() {
