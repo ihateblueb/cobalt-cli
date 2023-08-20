@@ -5,6 +5,7 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest;
 use std::error::Error;
+use std::fmt::format;
 
 pub fn download(
     prefix: &str,
@@ -44,16 +45,19 @@ pub fn download(
 
     // get ids
 
-    println!("{:?}", rss_content);
-
-    let vididregex = Regex::new(r"/<yt:videoId>(.*)<\/yt:videoId>/gmU").unwrap();
+    let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
     let result = vididregex.captures_iter(&rss_content);
 
     for mat in result {
-        println!("{:#?}", mat);
+        let matchurl = format!("https://youtu.be/{}", mat.get(1).unwrap().as_str());
+        if mode == "auto" {
+            download::auto(prefix, debug, apiurl, path, &matchurl, quality, codec, ttwatermark, audioformat, dublang, fullaudio, mute);
+        } else if mode == "audio" {
+            download::auto(prefix, debug, apiurl, path, &matchurl, quality, codec, ttwatermark, audioformat, dublang, fullaudio, mute);
+        } else {
+            errors::create_end("invalid mode. options: auto, audio");
+        }
     }
-
-    println!("{:#?}", vididregex.find_iter(&rss_content).count());
 
     // now DOWNLAOD
 
