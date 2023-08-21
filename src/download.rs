@@ -153,7 +153,7 @@ async fn getstream(prefix: &str, url: &str, body: HashMap<&str, &str>, path: &st
             downloadfromstream(prefix, &streamurl.to_string(), path).await;
         println!("{:?}", idk);
     } else {
-        errors::create_end(
+        errors::create_cont(
             format!(
                 "failed to get stream url. {}",
                 fmtd_res2.get("text").unwrap()
