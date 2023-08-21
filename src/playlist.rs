@@ -41,12 +41,8 @@ pub fn download(
     );
     let rss_content = get_feed(&rss_url).unwrap();
 
-    // get ids
-
     let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
     let result = vididregex.captures_iter(&rss_content);
-
-    // now DOWNLAOD
 
     println!(
         "{} starting to download videos in playlist... you might be here for a while!",
