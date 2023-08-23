@@ -32,23 +32,45 @@ pub fn download(
         errors::create_end("invalid playlist url.");
     }
 
-    // @patter@mcr.wtf left a comment on one of my posts (https://wetdry.world/deck/@patter@mcr.wtf/110908024192301245)
-    // and told me about the RSS feeds which are used for this and that SIGNIFICANTLY helped with this feature
-
     let rss_url = format!(
-        "https://www.youtube.com/feeds/videos.xml?playlist_id={}",
+        "https://www.youtube.com/playlist?list={}",
         playlisturl
     );
-    let rss_content = get_feed(&rss_url).unwrap();
 
-    let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
-    let result = vididregex.captures_iter(&rss_content);
+    //let rss_content = get_feed(&rss_url).unwrap();
+
+    //let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
+    //let result = vididregex.captures_iter(&rss_content);
 
     println!(
         "{} starting to download videos in playlist... you might be here for a while!",
         prefix
     );
 
+    // ytInitialData = [^{]*(.*?); *</script>
+
+        let silly = scrape_playlist(&rss_url).unwrap();
+
+        let presillyregex = Regex::new(r#"ytInitialData = [^{]*(.*?); *</script>"#).unwrap();
+        let sillyregex = Regex::new(r#"(?mU)\{\\"videoId\\":\\"(.*)\\","#).unwrap();
+
+        //{\"videoId\":\"
+        // \",
+
+        let presilly_r = presillyregex.captures_iter(&silly);
+
+        for mat in presilly_r {
+            let mut ytdata = mat.unwrap();
+        }
+
+        let silly_r = sillyregex.captures_iter(ytdata);
+
+        for mat in silly_r {
+
+        }
+
+    /*
+    
     for mat in result {
         let matchurl = format!("https://youtu.be/{}", mat.get(1).unwrap().as_str());
         if mode == "auto" {
@@ -60,7 +82,14 @@ pub fn download(
         }
     }
 
+    */
+
     println!("{} completed all downloads to {}", prefix, path);
+}
+
+fn scrape_playlist(url: &str) -> Result<String, Box<dyn Error>> {
+    let body = reqwest::blocking::get(url)?.text()?;
+    Ok(body)
 }
 
 fn get_feed(url: &str) -> Result<String, Box<dyn Error>> {

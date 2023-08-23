@@ -6,7 +6,7 @@ mod download;
 mod errors;
 mod playlist;
 
-static DEBUG: bool = true;
+static DEBUG: bool = false;
 static PREFIX: &'static str = "[cobalt]";
 
 fn main() {
@@ -45,7 +45,7 @@ fn main() {
             Arg::new("quality")
                 .short('q')
                 .long("quality")
-                .help("set video quality (default: 1080p, other: 4320p+, 2160p, 720p, 480p, 360p)"),
+                .help("set video quality (default: 1080, other: 4320, 2160, 720, 480, 360)"),
         )
         .arg(
             Arg::new("codec")
