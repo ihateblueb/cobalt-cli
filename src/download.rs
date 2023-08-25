@@ -137,7 +137,7 @@ async fn getstream(prefix: &str, url: &str, body: HashMap<&str, &str>, path: &st
         let idk: std::result::Result<(), Box<dyn Error + Send + Sync>> = downloadfromstream(prefix, &streamurl.to_string(), path).await;
         println!("{:?}", idk);
     } else {
-        errors::create_end(format!("failed to get stream url. {}", fmtd_res2.get("text").unwrap()).as_str().color("red"));
+        errors::create_end(&format!("failed to get stream url. {}", fmtd_res2.get("text").unwrap()).as_str().color("red"));
     }
 }
  
