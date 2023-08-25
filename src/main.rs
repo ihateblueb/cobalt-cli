@@ -101,23 +101,19 @@ fn main() {
     let homedirexpect = homedirpathbuf.expect("method not found in `Option<PathBuf>`");
     let homedir = homedirexpect.display();
 
-    // download mode
-    let mut mode = "unspecified".to_string(); // will be changed or throw error & stop, this is so DEBUG has a fallback
+    let mut mode = "unspecified".to_string();
     if matches.get_one::<String>("mode").is_none() {
         errors::create_end("you didn't specify a mode");
     } else {
         mode = matches.get_one::<String>("mode").unwrap().to_string();
     }
 
-    // api url
     let d_apiurl = "co.wuk.sh".to_string();
     let apiurl: &String = matches.get_one::<String>("apiurl").unwrap_or(&d_apiurl);
 
-    // save path
     let d_path = format!("{homedir}/Downloads").to_string();
     let path: &String = matches.get_one::<String>("path").unwrap_or(&d_path);
 
-    // video url
     let mut url = "unspecified".to_string();
     if matches.get_one::<String>("url").is_none() {
         errors::create_end("you didn't specify a video url");
@@ -125,15 +121,12 @@ fn main() {
         url = matches.get_one::<String>("url").unwrap().to_string();
     }
 
-    // video quality
     let d_quality = "1080p".to_string();
     let quality: &String = matches.get_one::<String>("quality").unwrap_or(&d_quality);
 
-    // yt codec
     let d_codec = "h264".to_string();
     let codec: &String = matches.get_one::<String>("codec").unwrap_or(&d_codec);
 
-    // tiktok watermark
     let mut ttwatermark = false;
     if matches.get_flag("ttwatermark") {
         ttwatermark = true;
@@ -141,13 +134,11 @@ fn main() {
         ttwatermark = false;
     }
 
-    // audio format
     let d_audioformat = "mp3".to_string();
     let audioformat: &String = matches
         .get_one::<String>("audioformat")
         .unwrap_or(&d_audioformat);
 
-    // dub lang
     let mut dublang = false;
     if matches.get_flag("dublang") {
         dublang = true;
@@ -155,7 +146,6 @@ fn main() {
         dublang = false;
     }
 
-    // full audio
     let mut fullaudio = false;
     if matches.get_flag("fullaudio") {
         fullaudio = true;
@@ -163,7 +153,6 @@ fn main() {
         fullaudio = false;
     }
 
-    // mute audio
     let mut mute = false;
     if matches.get_flag("mute") {
         mute = true;
@@ -171,7 +160,6 @@ fn main() {
         mute = false;
     }
 
-    // mute audio
     let mut playlist = false;
     if matches.get_flag("playlist") {
         playlist = true;
@@ -179,7 +167,6 @@ fn main() {
         playlist = false;
     }
 
-    // sillyyyy :3
     if DEBUG {
         println!(" ");
         println!("{PREFIX} {}", "====[ debug ]====".color("cyan"));
@@ -194,7 +181,6 @@ fn main() {
         println!(" ");
     }
 
-    // now its download time
     if playlist {
         playlist::download(
             PREFIX,

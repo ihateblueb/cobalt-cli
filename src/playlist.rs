@@ -37,52 +37,12 @@ pub fn download(
         playlisturl
     );
 
-    //let rss_content = get_feed(&rss_url).unwrap();
-
-    //let vididregex = Regex::new(r"(?mU)<yt:videoId>(.*)<\/yt:videoId>").unwrap();
-    //let result = vididregex.captures_iter(&rss_content);
-
     println!(
         "{} starting to download videos in playlist... you might be here for a while!",
         prefix
     );
 
-    // ytInitialData = [^{]*(.*?); *</script>
 
-        let silly = scrape_playlist(&rss_url).unwrap();
-
-        let presillyregex = Regex::new(r#"ytInitialData = [^{]*(.*?); *</script>"#).unwrap();
-        let sillyregex = Regex::new(r#"(?mU)\{\\"videoId\\":\\"(.*)\\","#).unwrap();
-
-        //{\"videoId\":\"
-        // \",
-
-        let presilly_r = presillyregex.captures_iter(&silly);
-
-        for mat in presilly_r {
-            let mut ytdata = mat.unwrap();
-        }
-
-        let silly_r = sillyregex.captures_iter(ytdata);
-
-        for mat in silly_r {
-
-        }
-
-    /*
-    
-    for mat in result {
-        let matchurl = format!("https://youtu.be/{}", mat.get(1).unwrap().as_str());
-        if mode == "auto" {
-            download::auto(prefix, debug, apiurl, path, &matchurl, quality, codec, ttwatermark, audioformat, dublang, fullaudio, mute);
-        } else if mode == "audio" {
-            download::auto(prefix, debug, apiurl, path, &matchurl, quality, codec, ttwatermark, audioformat, dublang, fullaudio, mute);
-        } else {
-            errors::create_end("invalid mode. options: auto, audio");
-        }
-    }
-
-    */
 
     println!("{} completed all downloads to {}", prefix, path);
 }
