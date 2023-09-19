@@ -1,7 +1,7 @@
 # cobalt-cli
 save what you love from your terminal
 ## how to get
-from the source code you can build with `cargo build`. or, go grab a binary from releases. theres currently a mac one, but i don't know how to run it on mac. you should probably build it yourself.
+from the source code you can build with `cargo build --release`. or, go grab a binary from releases. theres currently a mac one, but i don't know how to run it on mac. you should probably build it yourself.
 ## how to use
 > [tocobaltcli] is the path or alias to the cobalt cli executable  
 
