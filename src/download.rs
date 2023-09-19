@@ -1,4 +1,3 @@
-use colored::Colorize;
 use reqwest;
 use std::collections::HashMap;
 use serde_json;
@@ -23,7 +22,7 @@ pub fn auto(
     fullaudio: bool,
     mute: bool,
 ) {
-    println!("{prefix} getting stream URL for {}...", url.color("yellow"));
+    println!("{prefix} getting stream URL for {}...", url);
 
     let mut getstream_body = HashMap::new();
         getstream_body.insert("url", url);
@@ -50,12 +49,12 @@ pub fn auto(
     let getstream_url = &format!("https://{apiurl}/api/json");
     if debug {
         println!(" ");
-        println!("{prefix} {}", "====[ debug ]====".color("cyan"));
+        println!("{prefix} {}", "====[ debug ]====");
         println!("{prefix} get stream url request url:");
-        println!("{prefix} {}", getstream_url.color("blue"));
+        println!("{prefix} {}", getstream_url);
         println!("{prefix} get stream url request body:");
-        println!("{prefix} {}", serde_json::to_string(&getstream_body).unwrap().color("blue"));
-        println!("{prefix} {}", "====[ debug ]====".color("cyan"));
+        println!("{prefix} {}", serde_json::to_string(&getstream_body).unwrap());
+        println!("{prefix} {}", "====[ debug ]====");
         println!(" ");
     }
 
@@ -76,7 +75,7 @@ pub fn audio(
     fullaudio: bool,
     mute: bool,
 ) {
-    println!("{prefix} getting stream URL for {}...", url.color("yellow"));
+    println!("{prefix} getting stream URL for {}...", url);
 
     let mut getstream_body = HashMap::new();
         getstream_body.insert("isAudioOnly", "true");
@@ -104,12 +103,12 @@ pub fn audio(
     let getstream_url = &format!("https://{apiurl}/api/json");
     if debug {
         println!(" ");
-        println!("{prefix} {}", "====[ debug ]====".color("cyan"));
+        println!("{prefix} {}", "====[ debug ]====");
         println!("{prefix} get stream url request url:");
-        println!("{prefix} {}", getstream_url.color("blue"));
+        println!("{prefix} {}", getstream_url);
         println!("{prefix} get stream url request body:");
-        println!("{prefix} {}", serde_json::to_string(&getstream_body).unwrap().color("blue"));
-        println!("{prefix} {}", "====[ debug ]====".color("cyan"));
+        println!("{prefix} {}", serde_json::to_string(&getstream_body).unwrap());
+        println!("{prefix} {}", "====[ debug ]====");
         println!(" ");
     }
 
@@ -137,7 +136,7 @@ async fn getstream(prefix: &str, url: &str, body: HashMap<&str, &str>, path: &st
         let idk: std::result::Result<(), Box<dyn Error + Send + Sync>> = downloadfromstream(prefix, &streamurl.to_string(), path).await;
         println!("{:?}", idk);
     } else {
-        errors::create_end(&format!("{} failed to get stream url. {}", prefix, fmtd_res2.get("text").unwrap().color("red")).as_str());
+        errors::create_end(&format!("{} failed to get stream url. {}", prefix, fmtd_res2.get("text").unwrap()).as_str());
     }
 }
  
@@ -151,6 +150,6 @@ async fn downloadfromstream(prefix: &str, url: &str, path: &str) -> Result<()> {
     let mut file = std::fs::File::create(format!("{path}/{filename3}"))?;
     let mut content =  Cursor::new(response.bytes().await?);
     std::io::copy(&mut content, &mut file)?;
-    println!("{} completed download. saved as {}", prefix, full_path.color("yellow"));
+    println!("{} completed download. saved as {}", prefix, full_path);
     Ok(())
 }

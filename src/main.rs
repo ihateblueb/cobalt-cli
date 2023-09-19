@@ -3,7 +3,6 @@
 ////////////////
 
 use clap::{Arg, Command};
-use colored::Colorize;
 use std::env;
 
 mod download;
@@ -158,7 +157,7 @@ fn main() {
 
     if DEBUG {
         println!(" ");
-        println!("{PREFIX} {}", "====[ debug ]====".color("cyan"));
+        println!("{PREFIX} {}", "====[ debug ]====");
         println!("{PREFIX} **mode**: {mode};");
         println!("{PREFIX} apiurl: {apiurl}; path: {path}; url: {url};");
         println!("{PREFIX} quality: {quality}; codec: {codec};");
@@ -166,7 +165,7 @@ fn main() {
             "{PREFIX} ttwatermark: {ttwatermark}; audioformat: {audioformat}; dublang: {dublang};"
         );
         println!("{PREFIX} fullaudio: {fullaudio}; mute: {mute};");
-        println!("{PREFIX} {}", "====[ debug ]====".color("cyan"));
+        println!("{PREFIX} {}", "====[ debug ]====");
         println!(" ");
     }
 
